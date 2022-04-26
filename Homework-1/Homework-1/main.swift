@@ -12,7 +12,7 @@ struct Car: CustomStringConvertible {
         """
     }
     
-    enum EnumBody: String, CaseIterable {
+    enum Body: String, CaseIterable {
         case sedan = "Седан"
         case universal = "Универсал"
         case hatchback = "Хэтчбек"
@@ -21,7 +21,7 @@ struct Car: CustomStringConvertible {
     
     var manufacturer: String
     var model: String
-    var body: EnumBody
+    var body: Body
     var yearOfIssue: Int?
     var carNumber: String?
 }
@@ -47,36 +47,33 @@ func correctReadLine(message: String) -> String {
     } while true
 }
 
-func anyDataReadLine(message: String) -> String? {
+func weakReadLine(message: String) -> String? {
     
     print(message)
-    let data = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines)
-    return data?.isEmpty ?? true ? nil : data
+    let result = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines)
+    return result?.isEmpty ?? true ? nil : result
 }
 
-func getBody() -> Car.EnumBody {
+func getBody() -> Car.Body {
 
     let bodyList = buildBodyList()
     var correctBody: String
     var index = 0
     repeat {
         correctBody = correctReadLine(message: bodyList)
-        index = Int(correctBody) ?? Car.EnumBody.allCases.count + 1 // если оставить 0, то при вводе текста, сохраняется с нулевым индексом т.е. "Седан"
-        
-        if Int(correctBody) == nil {
-            continue
-        }
-        
-    } while index >= Car.EnumBody.allCases.count || index < 0
 
-    return Car.EnumBody.allCases[index]
+        index = Int(correctBody) ?? Car.Body.allCases.count + 1
+        
+    } while index >= Car.Body.allCases.count || index < 0
+
+    return Car.Body.allCases[index]
 }
 
 func buildBodyList() -> String {
 
     var bodyType = "Тип кузова:"
 
-    for (index, body) in Car.EnumBody.allCases.enumerated(){
+    for (index, body) in Car.Body.allCases.enumerated(){
         bodyType += "\n\(index) - \(body.rawValue)"
     }
     return bodyType
@@ -89,13 +86,13 @@ func createNewCar(){
     let body = getBody()
     
     let yearOfIssue: Int?
-    if let year = anyDataReadLine(message: "Введите год выпуска"){
+    if let year = weakReadLine(message: "Введите год выпуска"){
         yearOfIssue = Int(year)
     } else {
         yearOfIssue = nil
     }
     
-    let carNumber = anyDataReadLine(message: "Введите номер автомобиля")
+    let carNumber = weakReadLine(message: "Введите номер автомобиля")
 
     let newCar = Car(manufacturer: manufacturer,
                      model: model,
